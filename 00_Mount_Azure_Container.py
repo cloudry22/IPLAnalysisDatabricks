@@ -4,6 +4,14 @@
 
 # COMMAND ----------
 
+if dbutils.fs.ls("/mnt/ipl_data"):
+    dbutils.fs.unmount("/mnt/ipl_data")
+    
+    
+
+
+# COMMAND ----------
+
 dbutils.fs.mount(
 source="wasbs://ipl@nsestockdatastorage.blob.core.windows.net",
 mount_point="/mnt/ipl_data",
