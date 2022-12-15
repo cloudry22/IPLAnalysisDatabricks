@@ -1,0 +1,28 @@
+{
+    "id": "25c05ba1-5fdb-4992-a69d-73a82bc7dc6f",
+    "clusters": [
+        {
+            "label": "default",
+            "autoscale": {
+                "min_workers": 0,
+                "max_workers": 1,
+                "mode": "ENHANCED"
+            }
+        }
+    ],
+    "development": true,
+    "continuous": false,
+    "channel": "CURRENT",
+    "edition": "ADVANCED",
+    "photon": false,
+    "libraries": [
+        {
+            "notebook": {
+                "path": "/Repos/raut1606@gmail.com/IPLAnalysisDatabricks/01_Create_DLT"
+            }
+        }
+    ],
+    "name": "IPL_Create_Table",
+    "storage": "dbfs:/mnt/ipl_data/StoreData/",
+    "target": "IPL"
+}
