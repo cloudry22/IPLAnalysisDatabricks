@@ -37,7 +37,7 @@ limit 10
 
 -- COMMAND ----------
 
-select batter,count(*) as No_Of_Fours from IPL_DETAILS where batsman_run=6
+select batter,count(*) as No_Of_Six from IPL_DETAILS where batsman_run=6
 group by batter
 order by 2 desc
 limit 10
@@ -82,7 +82,7 @@ Order by
 
 -- COMMAND ----------
 
-select batter,count(distinct match_id) as NoOfMatches,cast((sum(batsman_run)/count(batsman_run)*100) as decimal(10,2)) as StrikeRate from   IPL_DETAILS
+select batter,count(distinct id) as NoOfMatches,cast((sum(batsman_run)/count(batsman_run)*100) as decimal(10,2)) as StrikeRate from   IPL_DETAILS
 group by batter
 having count(batsman_run)>=100
 order by 3 desc
@@ -98,7 +98,7 @@ limit 20
 select batter as Batsman,cast(sum(batsman_run)/sum(isWicketDelivery)  as decimal(10,2)) as Average
 from IPL_DETAILS  
 group by batter 
-having count(distinct match_id)>=15
+having count(distinct id)>=15
 order by 2 desc
 limit 15
 
@@ -107,17 +107,6 @@ limit 15
 
 -- MAGIC %md
 -- MAGIC #### Fastest 50 & 100
-
--- COMMAND ----------
-
-Create or Replace Temp View ScorePerBall
-as
-select id,Season , MatchNumber,Innings,overs,ballnumber,batter,sum(batsman_run) over(partition by Season , MatchNumber,Innings,batter order by Innings,overs,ballnumber rows between unbounded 
-preceding and current row) as runs_scored ,
-Row_Number() over(partition by Season , MatchNumber,Innings,batter order by Innings,overs,ballnumber rows between unbounded 
-preceding and current row) as balls_faced
-from IPL_DETAILS
-where extra_type not in ('wides') 
 
 -- COMMAND ----------
 
