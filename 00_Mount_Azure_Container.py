@@ -4,10 +4,20 @@
 
 # COMMAND ----------
 
-if dbutils.fs.ls("/mnt/ipl_data"):
-    dbutils.fs.unmount("/mnt/ipl_data")
-    
-    
+def file_exists(path):
+  try:
+    dbutils.fs.ls(path)
+    dbutils.fs.unmount(path)
+  except Exception as e:
+    if 'java.io.FileNotFoundException' in str(e):
+      return False
+    else:
+      raise
+
+# COMMAND ----------
+
+mount_point="/mnt/ipl_data"
+file_exists(mount_point)    
 
 
 # COMMAND ----------
