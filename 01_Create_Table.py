@@ -82,3 +82,8 @@ IPLBallsDetailsTrans.createOrReplaceTempView("IPLBallsDetailsTbl")
 # MAGIC inferSchema="true",
 # MAGIC quote='"'
 # MAGIC )
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from IPL.IPL_MATCHES_RAW

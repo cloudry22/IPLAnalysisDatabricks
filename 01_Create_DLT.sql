@@ -2,9 +2,8 @@
 create or replace streaming live  table IPL_MATCHES_RAW
 (constraint ID_Not_NULL expect(ID is not null) on violation drop row)
 comment "Bronze Table"
-
 as
-select * from cloud_files("dbfs:/mnt/ipl_data/Matches/","csv",map("cloudFiles.inferColumnTypes","true",
+select * from cloud_files("dbfs:/mnt/ipl_data/IPL_Matches_Delta/","csv",map("cloudFiles.inferColumnTypes","true",
 "header", "true",
 "quote", '"'
 ))
@@ -45,7 +44,7 @@ create or replace streaming live  table IPL_BALL_DETAILS_RAW
 
 comment "Bronze Table"
 as
-select * from cloud_files("dbfs:/mnt/ipl_data/BallByBall/","csv",map("cloudFiles.inferColumnTypes","true",
+select * from cloud_files("/mnt/ipl_data/IPL_Ball_by_Ball_Delta","csv",map("cloudFiles.inferColumnTypes","true",
 "header", "true",
 "quote", '"'
 ))
