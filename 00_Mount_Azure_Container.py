@@ -34,7 +34,7 @@ IPLContainerValue=dbutils.secrets.get('GetIPLContainer','IPLContainerValue')
 # COMMAND ----------
 
 dbutils.fs.mount(
-source="wasbs://ipl@nsestockdatastorage.blob.core.windows.net",
+source="wasbs://iplraw@nsestockdatastorage.blob.core.windows.net",
 mount_point="/mnt/ipl_data",
 extra_configs={IPLContainerKey:IPLContainerValue}
     
@@ -43,4 +43,4 @@ extra_configs={IPLContainerKey:IPLContainerValue}
 
 # COMMAND ----------
 
-dbutils.fs.ls("/mnt/ipl_data")
+dbutils.fs.ls("/mnt/ipl_data/data/")
