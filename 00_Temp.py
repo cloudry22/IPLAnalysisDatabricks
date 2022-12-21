@@ -3,11 +3,12 @@
 
 # COMMAND ----------
 
-dbutils.fs.mkdirs("/mnt/ipl_data/data/")
+import json
+SchemaLocation=dbutils.fs.head("/mnt/ipl_data/data/Schema/IPLMatches.txt")
+new_schema = StructType.fromJson(json.loads(SchemaLocation))
 
 # COMMAND ----------
 
-from  pyspark.sql.functions import input_file_name
 
 
 # COMMAND ----------
@@ -17,10 +18,14 @@ IPLDataset = (
     .option("cloudFiles.format", "json")
     .option("multiline", "true")
     .option("cloudFiles.inferColumnTypes", "true")
-    .option("cloudFiles.schemaLocation", SchemaLocation)
+    .schema(new_schema)
     .load(SourceLocation)
     .select("*","_metadata.file_name")
 )
+
+# COMMAND ----------
+
+IPLDataset.display()
 
 # COMMAND ----------
 
@@ -107,18 +112,23 @@ MatchInfo.createOrReplaceTempView("MatchInfo")
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC select ID,info,info.outcome.by.* from MatchInfo where id=1312198501269
+
+# COMMAND ----------
+
 MatchDetails=spark.sql(""" 
 SELECT 
     ID
     ,info.city
 	,info.dates[0] AS match_day
-	,info.event.*
+	,info.event.match_number
 	,info.officials.match_referees [0] AS match_referees
 	,info.officials.reserve_umpires [0] AS reserve_umpires
 	,info.officials.tv_umpires [0] AS tv_umpires
 	,info.officials.umpires [0] AS Umpire1
 	,info.officials.umpires [1] AS Umpire2
-	,info.outcome.*
+	,info.outcome.by.*
 	,info.outcome.winner AS winningTeam
 	,info.player_of_match [0] AS player_of_match
 	,info.season
@@ -140,11 +150,5 @@ MatchDetails.writeStream    .format("json")    .trigger(processingTime="10 secon
 
 # COMMAND ----------
 
-
-MatchDetails.writeStream    .format("json")    .trigger(processingTime="10 seconds")    .option("checkpointLocation", CheckpointLocation)    .option("path", TargetLocation)    .outputMode("append")    .table("MatchPravin")
-    
-
-# COMMAND ----------
-
 # MAGIC %sql
-# MAGIC drop table  MatchPravin
+# MAGIC select * from   MatchPravin where ID=4191641312200
