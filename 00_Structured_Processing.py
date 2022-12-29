@@ -9,7 +9,7 @@ new_schema = StructType.fromJson(json.loads(SchemaLocation))
 
 # COMMAND ----------
 
-
+new_schema
 
 # COMMAND ----------
 
@@ -18,6 +18,7 @@ IPLDataset = (
     .option("cloudFiles.format", "json")
     .option("multiline", "true")
     .option("cloudFiles.inferColumnTypes", "true")
+#    .option("cloudFiles.schemaLocation", SchemaLocation)
     .schema(new_schema)
     .load(SourceLocation)
     .select("*","_metadata.file_name")
@@ -33,7 +34,7 @@ import pyspark.sql.functions as F
 from pyspark.sql.types import *
 
 innings = IPLDataset.selectExpr("innings", "replace(file_name,'.json') as ID")
-
+innings.display()
 
 # COMMAND ----------
 
@@ -55,6 +56,11 @@ inningsDetail.createOrReplaceTempView("inningsDetail")
 # MAGIC   explode(overs) as over
 # MAGIC from
 # MAGIC   inningsDetail
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from OverDetails
 
 # COMMAND ----------
 
@@ -104,6 +110,10 @@ from
 
 # COMMAND ----------
 
+BallByBall.display()
+
+# COMMAND ----------
+
 MatchInfo = IPLDataset.selectExpr("info", "replace(file_name,'.json') as ID")
 
 # COMMAND ----------
@@ -113,7 +123,7 @@ MatchInfo.createOrReplaceTempView("MatchInfo")
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select ID,info,info.outcome.by.* from MatchInfo where id=1312198501269
+# MAGIC select ID,info,info.outcome.by.* from MatchInfo
 
 # COMMAND ----------
 
@@ -122,7 +132,7 @@ SELECT
     ID
     ,info.city
 	,info.dates[0] AS match_day
-	,info.event.match_number
+	,coalesce(info.event.match_number,info.event.stage) as match_number
 	,info.officials.match_referees [0] AS match_referees
 	,info.officials.reserve_umpires [0] AS reserve_umpires
 	,info.officials.tv_umpires [0] AS tv_umpires
@@ -144,6 +154,15 @@ FROM MatchInfo
 
 # COMMAND ----------
 
+MatchDetails.display()
+
+# COMMAND ----------
+
+MatchDetails.writeStream    .format("json")    .trigger(availableNow=True)    .option("checkpointLocation", CheckpointLocation)    .option("path", TargetLocation)    .outputMode("append")    .table("MatchPravin")
+
+
+# COMMAND ----------
+
 
 MatchDetails.writeStream    .format("json")    .trigger(processingTime="10 seconds")    .option("checkpointLocation", CheckpointLocation)    .option("path", TargetLocation)    .outputMode("append")    .table("MatchPravin")
     
@@ -151,4 +170,13 @@ MatchDetails.writeStream    .format("json")    .trigger(processingTime="10 secon
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from   MatchPravin where ID=4191641312200
+# MAGIC select * from MatchPravin order by match_Day desc
+
+# COMMAND ----------
+
+CopyFile()
+
+# COMMAND ----------
+
+for i in range(10):
+    CopyFile()

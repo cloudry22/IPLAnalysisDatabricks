@@ -1,9 +1,10 @@
 # Databricks notebook source
 SourceLocation="/mnt/ipl_data/data/Source/"
+SourceCompleteLocation="/mnt/ipl_data/data/Source_Complete/"
 TargetLocation="/mnt/ipl_data/data/Target/"
 SchemaLocation="/mnt/ipl_data/Schema/"
 CheckpointLocation="/mnt/ipl_data/CheckPoint/"
-DownStreamOutput="/mnt/ipl_data/data/DownStream/"
+
 
 # COMMAND ----------
 
@@ -15,31 +16,31 @@ def cleanup(directory):
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
-dbutils.fs.rm("/mnt/ipl_data/data/",True)
-
-# COMMAND ----------
-
 dbutils.fs.mkdirs(SourceLocation)
 
 # COMMAND ----------
 
-dbutils.fs.mkdirs(TargetLocation)
+def listFile(path):
+    list1=dbutils.fs.ls(path)
+    FileList=[]
+    for i in range(0,len(list1)):
+        if "/" in list1[i].path:
+            list2=dbutils.fs.ls(path+list1[i].name)
+            for j in range(0,len(list2)):
+                if ".json" in list2[j].name:
+                    FileList.append(path+list2[j].name)
+    return FileList
+                
+
+
 
 # COMMAND ----------
 
-dbutils.fs.mkdirs(CheckpointLocation)
+def CopyFile():
+    sourcePath=FileList[0]
+    dbutils.fs.cp(sourcePath,SourceLocation)
+    FileList.pop(0)
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC 
-# MAGIC select * from json.`/mnt/ipl_data/data/Target/*.json`
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from MatchPravin
+CopyFile()
