@@ -1,7 +1,9 @@
 # Databricks notebook source
 SourceLocation="/mnt/ipl_data/data/Source/"
 SourceCompleteLocation="/mnt/ipl_data/data/Source_Complete/"
-TargetLocation="/mnt/ipl_data/data/Target/"
+TargetLocationMatches="/mnt/ipl_data/data/TargetMatches/"
+TargetLocationBallByBall="/mnt/ipl_data/data/TargetBallByBall/"
+
 SchemaLocation="/mnt/ipl_data/Schema/"
 CheckpointLocation="/mnt/ipl_data/CheckPoint/"
 
@@ -36,9 +38,15 @@ def listFile(path):
 
 # COMMAND ----------
 
+FileList=listFile(SourceCompleteLocation)
+
+# COMMAND ----------
+
 def CopyFile():
     sourcePath=FileList[0]
     dbutils.fs.cp(sourcePath,SourceLocation)
+    print("File ",{sourcePath},"Copied to ",{SourceLocation})
+ 
     FileList.pop(0)
 
 # COMMAND ----------

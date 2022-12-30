@@ -4,12 +4,11 @@
 # COMMAND ----------
 
 import json
+import pyspark.sql.functions as F
+from pyspark.sql.types import *
+
 SchemaLocation=dbutils.fs.head("/mnt/ipl_data/data/Schema/IPLMatches.txt")
 new_schema = StructType.fromJson(json.loads(SchemaLocation))
-
-# COMMAND ----------
-
-new_schema
 
 # COMMAND ----------
 
@@ -26,15 +25,9 @@ IPLDataset = (
 
 # COMMAND ----------
 
-IPLDataset.display()
-
-# COMMAND ----------
-
-import pyspark.sql.functions as F
-from pyspark.sql.types import *
 
 innings = IPLDataset.selectExpr("innings", "replace(file_name,'.json') as ID")
-innings.display()
+
 
 # COMMAND ----------
 
@@ -56,11 +49,6 @@ inningsDetail.createOrReplaceTempView("inningsDetail")
 # MAGIC   explode(overs) as over
 # MAGIC from
 # MAGIC   inningsDetail
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from OverDetails
 
 # COMMAND ----------
 
@@ -90,27 +78,31 @@ inningsDetail.createOrReplaceTempView("inningsDetail")
 BallByBall = spark.sql(
     """select
   ID,
-  BattingTeam,
-  Innings + 1 as Innings,
-  OverNo,
-  BallNumber,
-  ball.batter as batsman,
+ Innings + 1 as innings,
+  OverNo as overs,
+  BallNumber as ballnumber ,
+  ball.batter ,
   ball.bowler,
   ball.non_striker,
-  ball.wickets.fielders.name [0] [0] as FieldingPlayer,
-  ball.wickets.kind [0] as dissmisalType,
-  ball.wickets.player_out [0] as player_out,
+  case when ball.extras.byes is not null then 'byes' 
+       when ball.extras.legbyes is not null then 'legbyes'
+       when ball.extras.noballs is not null then 'noballs'
+       when ball.extras.penalty is not null then 'penalty'
+       when ball.extras.wides is not null then 'wides'
+   else null end as extra_type,
   ball.runs.batter as batsman_run,
-  ball.extras.*,
-  ball.runs.extras as extrarun,
-  ball.runs.total as total_run
+
+ball.runs.extras as extrarun,
+  ball.runs.total as total_run,
+  ball.wickets.player_out [0] as player_out,
+  ball.wickets.kind [0] as kind,
+
+  ball.wickets.fielders.name [0] [0] as fielders_involved,
+    BattingTeam
+
 from
   BallDetails"""
 )
-
-# COMMAND ----------
-
-BallByBall.display()
 
 # COMMAND ----------
 
@@ -122,35 +114,37 @@ MatchInfo.createOrReplaceTempView("MatchInfo")
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC select ID,info,info.outcome.by.* from MatchInfo
-
-# COMMAND ----------
-
-MatchDetails=spark.sql(""" 
-SELECT 
+MatchDetails=spark.sql("""SELECT 
     ID
     ,info.city
-	,info.dates[0] AS match_day
-	,coalesce(info.event.match_number,info.event.stage) as match_number
-	,info.officials.match_referees [0] AS match_referees
-	,info.officials.reserve_umpires [0] AS reserve_umpires
-	,info.officials.tv_umpires [0] AS tv_umpires
-	,info.officials.umpires [0] AS Umpire1
+	,info.dates[0] AS Date
+   	,info.season as Season
+
+	,coalesce(info.event.match_number,info.event.stage) as MatchNumber
+    
+    ,info.teams [0] AS Team1
+	,info.teams [1] AS Team2
+    ,info.venue as Venue
+    
+  	,info.toss.winner AS TossWinner
+	,info.toss.decision AS TossDecision
+    ,null as super_over
+    ,info.outcome.winner AS WinningTeam
+    ,case when info.outcome.by.runs is not null then 'Runs' when info.outcome.by.wickets is not null then 'Wickets' else 'SuperOver' end as WonBy
+    ,coalesce(info.outcome.by.runs,info.outcome.by.wickets) as margin
+	,null as method
+    ,info.player_of_match [0] AS Player_of_Match
+
+
+    ,filter(array(info.players.*), x -> x IS NOT NULL)[0] as Team1Players
+    ,filter(array(info.players.*), x -> x IS NOT NULL)[1] as Team2Players
+    ,info.officials.umpires [0] AS Umpire1
 	,info.officials.umpires [1] AS Umpire2
-	,info.outcome.by.*
-	,info.outcome.winner AS winningTeam
-	,info.player_of_match [0] AS player_of_match
-	,info.season
-	,info.teams [0] AS team1
-	,info.teams [1] AS team2
-	,info.toss.decision AS toss_decision
-	,info.toss.winner AS toss_winner
-    ,filter(array(info.players.*), x -> x IS NOT NULL)[0] as FullTeam1
-    ,filter(array(info.players.*), x -> x IS NOT NULL)[1] as FullTeam2
+	
 FROM MatchInfo
 
 """)
+
 
 # COMMAND ----------
 
@@ -158,23 +152,34 @@ MatchDetails.display()
 
 # COMMAND ----------
 
-MatchDetails.writeStream    .format("json")    .trigger(availableNow=True)    .option("checkpointLocation", CheckpointLocation)    .option("path", TargetLocation)    .outputMode("append")    .table("MatchPravin")
+MatchDetails.writeStream    .format("json")    .trigger(availableNow=True)    .option("checkpointLocation", CheckpointLocation+"/MatchDetails")    .option("path", TargetLocationMatches)    .outputMode("append")    .table("MatchDetails")
+
+
+# COMMAND ----------
+
+BallByBall.writeStream    .format("json")    .trigger(availableNow=True)    .option("checkpointLocation", CheckpointLocation+"/BallByBall")    .option("path", TargetLocationBallByBall)    .outputMode("append")    .table("BallByBallDetails")
 
 
 # COMMAND ----------
 
 
-MatchDetails.writeStream    .format("json")    .trigger(processingTime="10 seconds")    .option("checkpointLocation", CheckpointLocation)    .option("path", TargetLocation)    .outputMode("append")    .table("MatchPravin")
+MatchDetails.writeStream    .format("json")    .trigger(processingTime="10 seconds")    .option("checkpointLocation", CheckpointLocation+"/MatchDetails")    .option("path", TargetLocationMatches)    .outputMode("append")    .table("MatchDetails")
     
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC select * from MatchPravin order by match_Day desc
+BallByBall.writeStream    .format("json")    .trigger(processingTime="10 seconds")    .option("checkpointLocation", CheckpointLocation+"/BallByBall")    .option("path", TargetLocationBallByBall)    .outputMode("append")    .table("BallByBallDetails")
+
 
 # COMMAND ----------
 
-CopyFile()
+# MAGIC %sql
+# MAGIC select * from MatchDetails 
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from BallByBallDetails 
 
 # COMMAND ----------
 
