@@ -75,4 +75,46 @@ from
 
 -- COMMAND ----------
 
-select * from IPL.IPL_MATCHES_RAW
+create or replace live  table IPL_Deatils
+
+comment "Gold Table"
+select
+
+  B.ID,
+  M.city,
+  M.Match_Date,
+  M.Season,
+  M.MatchNumber,
+  M.Team1,
+  M.Team2,
+  M.Venue,
+  M.TossWinner,
+  M.TossDecision,
+  M.WinningTeam,
+  M.WonBy,
+  M.Margin,
+  M.Player_of_Match,
+  M.Team1Players,
+  M.Team2Players,
+  M.Umpire1,
+  M.Umpire2,
+  B.innings,
+  B.overs,
+  B.ballnumber,
+  B.batter,
+  B.bowler,
+  B.Non_Striker,
+  B.extra_type,
+  B.batsman_run,
+  B.extrarun,
+  B.total_run,
+  B.isWicketDelivery,
+  B.player_out,
+  B.kind,
+  B.fielders_involved,
+  B.BattingTeam
+from
+  live.IPL_BALL_DETAILS_CLEANED B inner join live.IPL_MATCHES_CLEANED M 
+  on B.ID=M.ID
+
+
