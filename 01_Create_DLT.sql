@@ -75,7 +75,7 @@ from
 
 -- COMMAND ----------
 
-create or replace live  table IPL_Deatils
+create or replace live  table IPL_Details
 
 comment "Gold Table"
 select

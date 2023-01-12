@@ -1,2 +1,3 @@
 -- Databricks notebook source
-select *  from IPL.IPL_Deatils
+ALTER TABLE IPL.IPL_Deatils
+rename   to IPL.IPL_Details

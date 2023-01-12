@@ -183,5 +183,4 @@ BallByBall.writeStream    .format("json")    .trigger(processingTime="10 seconds
 
 # COMMAND ----------
 
-for i in range(10):
-    CopyFile()
+CopyFile()
