@@ -3,6 +3,12 @@
 
 -- COMMAND ----------
 
+select season ,count(*) from IPL_MATCHES_CLEANED
+group by season
+order by 1
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC #All Time Batting Leaders
 
@@ -102,6 +108,28 @@ having count(distinct id)>=15
 order by 2 desc
 limit 15
 
+
+-- COMMAND ----------
+
+Create or Replace Temp View ScorePerBall
+as
+select id,Season , MatchNumber,Innings,overs,ballnumber,batter,sum(batsman_run) over(partition by Season , MatchNumber,Innings,batter order by Innings,overs,ballnumber rows between unbounded 
+preceding and current row) as runs_scored ,
+Row_Number() over(partition by Season , MatchNumber,Innings,batter order by Innings,overs,ballnumber rows between unbounded 
+preceding and current row) as balls_faced
+from IPL_DETAILS
+where extra_type is null
+
+-- COMMAND ----------
+
+select Season , MatchNumber,Innings,batter ,batsman_run,sum(batsman_run) over(partition by Season , MatchNumber,Innings,batter order by Innings,overs,ballnumber rows between unbounded 
+preceding and current row) as runs_scored,extra_type
+from IPL_DETAILS where batter='BB McCullum' and matchNumber=1
+--where batter like 'mcc%'
+
+-- COMMAND ----------
+
+select * from ScorePerBall where batter='BB McCullum' and matchNumber=1
 
 -- COMMAND ----------
 
