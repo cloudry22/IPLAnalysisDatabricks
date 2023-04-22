@@ -30,11 +30,6 @@ Azure Databricks is used to process the IPL data. The data is read from Azure Bl
 
 The results of the analysis are stored in delta tables, and are visualized using databricks visualization. Interactive dashboards are created to display the results of the analysis.
 
-## Contributing
-
-## License
-
-## Acknowledgments
 
 ## Contact Information
 https://www.linkedin.com/in/pravinraut16/
