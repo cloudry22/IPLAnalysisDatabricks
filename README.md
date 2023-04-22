@@ -12,11 +12,13 @@ The architecture diagram above depicts the flow of data in the project. The IPL 
 
 ## Getting Started
 
-### Prerequisites
+To get started with this project, follow the steps below:
 
-### Installing
+1. Create an Azure Databricks workspace and start a new cluster. You can choose the lowest configuration cluster to start with, which is the Standard_DS3_v2 instance with 2 cores and 14 GB RAM.
 
-### Running the tests
+2. Create an Azure Data Lake Storage Gen2 (ADLS Gen2) account in the Azure portal.
+
+3. In the ADLS Gen2 account, create a container for storing the IPL data.
 
 ## Usage
 
