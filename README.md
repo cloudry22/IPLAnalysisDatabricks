@@ -20,7 +20,7 @@ To get started with this project, follow the steps below:
 
 3. In the ADLS Gen2 account, create a container for storing the IPL data.
 
- 4.In the Azure portal, create an Azure Key Vault.
+4.In the Azure portal, create an Azure Key Vault.
 
 5. Add a secret to the Key Vault that contains the ADLS Gen2 storage account key. This allows the Databricks cluster to access the ADLS Gen2 container.
 ## Usage
