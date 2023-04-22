@@ -20,13 +20,13 @@ The architecture diagram above depicts the flow of data in the project. The IPL 
 
 ## Usage
 
-Azure Databricks is used to process the IPL data. The data is read from Azure Blob Storage, and processed using Spark DataFrames. Various analyses are performed on the data, including but not limited to:
+Azure Databricks is used to process the IPL data. The data is read from Azure Blob Storage, and processed using Spark streaming DataFrames. Various analyses are performed on the data, including but not limited to:
 
 - Top batsmen and bowlers of the tournament
 - Team-wise and player-wise statistics
 - Analysis of player performance in various scenarios
 
-The results of the analysis are stored in Azure SQL Database, and are visualized using Power BI. Interactive dashboards are created to display the results of the analysis.
+The results of the analysis are stored in delta tables, and are visualized using databricks visualization. Interactive dashboards are created to display the results of the analysis.
 
 ## Contributing
 
