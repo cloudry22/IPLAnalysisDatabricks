@@ -102,7 +102,7 @@ ball.runs.extras as extrarun,
 
 from
   BallDetails"""
-)
+).na.fill("NA")
 
 # COMMAND ----------
 
@@ -143,12 +143,12 @@ MatchDetails=spark.sql("""SELECT
 	
 FROM MatchInfo
 
-""")
+""").na.fill("NA")
 
 
 # COMMAND ----------
 
-MatchDetails.display()
+BallByBall.display()
 
 # COMMAND ----------
 
@@ -183,4 +183,4 @@ BallByBall.writeStream    .format("json")    .trigger(processingTime="10 seconds
 
 # COMMAND ----------
 
-CopyFile()
+
