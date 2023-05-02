@@ -1,20 +1,9 @@
 -- Databricks notebook source
-create or replace streaming live  table IPL_MATCHES_RAW
-(constraint ID_Not_NULL expect(ID is not null) on violation drop row)
-comment "Bronze Table"
-as
-select * from cloud_files("/mnt/ipl_data/data/TargetMatches/","json",map("cloudFiles.inferColumnTypes","true",
-"header", "true",
-"quote", '"'
-))
-
--- COMMAND ----------
-
 create or replace streaming live  table IPL_BALL_DETAILS_RAW
 
 comment "Bronze Table"
 as
-select * from cloud_files("/mnt/ipl_data/data/TargetBallByBall/","json",map("cloudFiles.inferColumnTypes","true",
+select * from cloud_files('${SourceFiles.TargetLocationBallByBall}',"json",map("cloudFiles.inferColumnTypes","true",
 "header", "true",
 "quote", '"'
 ))
