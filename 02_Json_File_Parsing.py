@@ -148,10 +148,6 @@ FROM MatchInfo
 
 # COMMAND ----------
 
-BallByBall.display()
-
-# COMMAND ----------
-
 MatchDetails.writeStream    .format("json")    .trigger(availableNow=True)    .option("checkpointLocation", CheckpointLocation+"/MatchDetails")    .option("path", TargetLocationMatches)    .outputMode("append")    .table("MatchDetails")
 
 
@@ -159,27 +155,6 @@ MatchDetails.writeStream    .format("json")    .trigger(availableNow=True)    .o
 
 BallByBall.writeStream    .format("json")    .trigger(availableNow=True)    .option("checkpointLocation", CheckpointLocation+"/BallByBall")    .option("path", TargetLocationBallByBall)    .outputMode("append")    .table("BallByBallDetails")
 
-
-# COMMAND ----------
-
-
-MatchDetails.writeStream    .format("json")    .trigger(processingTime="10 seconds")    .option("checkpointLocation", CheckpointLocation+"/MatchDetails")    .option("path", TargetLocationMatches)    .outputMode("append")    .table("MatchDetails")
-    
-
-# COMMAND ----------
-
-BallByBall.writeStream    .format("json")    .trigger(processingTime="10 seconds")    .option("checkpointLocation", CheckpointLocation+"/BallByBall")    .option("path", TargetLocationBallByBall)    .outputMode("append")    .table("BallByBallDetails")
-
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from MatchDetails 
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from BallByBallDetails 
 
 # COMMAND ----------
 
