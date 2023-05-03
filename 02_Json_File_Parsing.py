@@ -7,8 +7,8 @@ import json
 import pyspark.sql.functions as F
 from pyspark.sql.types import *
 
-#SchemaLocation=dbutils.fs.head("/mnt/ipl_data/data/Schema/IPLMatches.txt")
-#new_schema = StructType.fromJson(json.loads(SchemaLocation))
+SchemaFile=dbutils.fs.head(SchemaLocation+"IPLMatches.txt")
+new_schema = StructType.fromJson(json.loads(SchemaFile))
 
 # COMMAND ----------
 
@@ -16,8 +16,9 @@ IPLDataset = (
     spark.readStream.format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("multiline", "true")
-    .option("cloudFiles.inferColumnTypes", "true")
-    .option("cloudFiles.schemaLocation", SchemaLocation)
+    #.option("cloudFiles.inferColumnTypes", "true")
+    #.option("cloudFiles.schemaLocation", SchemaLocation)
+    .schema(new_schema)
     .load(SourceFiles)
     .select("*","_metadata.file_name")
 )

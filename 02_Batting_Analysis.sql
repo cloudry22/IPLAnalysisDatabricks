@@ -19,13 +19,36 @@ order by 1
 
 -- COMMAND ----------
 
-select batter,sum(batsman_run)  as total_runs from IPL_DETAILS
-group by batter
-order by 2 desc
+select season,batter,sum(batsman_run)  as total_runs from IPL_DETAILS
+where season
+group by season,batter
+order by 3 desc
 limit 15
 
 -- COMMAND ----------
 
+select MatchNumber,sum(batsman_run) from IPL_DETAILS
+where season=2016 and batter='V Kohli' and MatchNumber='Final'
+group by MatchNumber
+
+-- COMMAND ----------
+
+select distinct  *  from IPL_DETAILS
+where season=2016 and batter='V Kohli' and MatchNumber='Final'
+
+
+-- COMMAND ----------
+
+delete from IPL_MATCHES_CLEANED;
+
+-- COMMAND ----------
+
+select sum(batsman_run) from IPL_BALL_DETAILS_RAW where id=981019 and batter='V Kohli'
+
+-- COMMAND ----------
+
+-- MAGIC
+-- MAGIC
 -- MAGIC %md
 -- MAGIC #### Most Fours
 

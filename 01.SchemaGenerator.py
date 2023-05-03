@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %run /Repos/raut1606@gmail.com/IPLAnalysisDatabricks/00_Setup
+# MAGIC %run ./00_Setup
 
 # COMMAND ----------
 
@@ -8,7 +8,7 @@ df1 = spark.read\
             .format("json")\
             .option("multiline", "true")\
             .option("inferSchema","true")\
-            .load(SourceCompleteLocation)
+            .load(SourceFiles)
             
 schema_json=df1.schema.json()
 
@@ -19,9 +19,9 @@ schema_json
 
 # COMMAND ----------
 
-dbutils.fs.rm("/mnt/ipl_data/data/Schema/IPLMatches.txt")
+dbutils.fs.rm(SchemaLocation+"IPLMatches.txt")
 
-dbutils.fs.put("/mnt/ipl_data/data/Schema/IPLMatches.txt", schema_json)
+dbutils.fs.put(SchemaLocation+"IPLMatches.txt", schema_json)
 
 
 

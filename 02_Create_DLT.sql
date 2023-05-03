@@ -3,7 +3,18 @@ create or replace streaming live  table IPL_BALL_DETAILS_RAW
 
 comment "Bronze Table"
 as
-select * from cloud_files('${SourceFiles.TargetLocationBallByBall}',"json",map("cloudFiles.inferColumnTypes","true",
+select * from cloud_files('${TargetLocationBallByBall}',"json",map("cloudFiles.inferColumnTypes","true",
+"header", "true",
+"quote", '"'
+))
+
+-- COMMAND ----------
+
+create or replace streaming live  table IPL_MATCHES_RAW
+
+comment "Bronze Table"
+as
+select * from cloud_files('${TargetLocationMatches}',"json",map("cloudFiles.inferColumnTypes","true",
 "header", "true",
 "quote", '"'
 ))
