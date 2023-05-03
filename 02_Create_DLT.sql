@@ -45,7 +45,7 @@ select
   Umpire1,
   Umpire2
 from
-  stream(live.IPL_MATCHES_RAW)
+  live.IPL_MATCHES_RAW
 
 -- COMMAND ----------
 
@@ -70,7 +70,7 @@ select
   fielders_involved,
   BattingTeam
 from
-  stream(live.IPL_BALL_DETAILS_RAW)
+  live.IPL_BALL_DETAILS_RAW
 
 
 -- COMMAND ----------
