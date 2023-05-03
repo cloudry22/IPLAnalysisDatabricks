@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %sql
-# MAGIC drop DATABASE IPL CASCADE;
+# MAGIC drop DATABASE if exists IPL CASCADE;
 
 # COMMAND ----------
 
