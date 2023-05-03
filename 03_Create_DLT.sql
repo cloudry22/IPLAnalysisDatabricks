@@ -64,7 +64,7 @@ select
   batsman_run,
   extrarun,
   total_run,
-  case when player_out is not null then 1 else 0 end as isWicketDelivery,
+  case when player_out !='NA' then 1 else 0 end as isWicketDelivery,
   player_out,
   kind,
   fielders_involved,

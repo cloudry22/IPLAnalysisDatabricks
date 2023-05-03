@@ -26,7 +26,7 @@ from
 (
 select distinct id as match_id,innings,overs,bowler from(
 select id,innings,overs,ballnumber,bowler,count(bowler) over(partition by id,innings,overs ) as maiden from IPL_Details
-where batsman_run=0 and extra_type is null
+where batsman_run=0 and extra_type='NA'
 )x
 where maiden=6
 )x
@@ -41,7 +41,7 @@ order by 2 desc
 -- COMMAND ----------
 
 select bowler,count(bowler) as dotBall from IPL_Details
-where batsman_run=0 and extra_type is null
+where batsman_run=0 and extra_type='NA'
 group by bowler
 order by 2 desc
 
@@ -56,7 +56,7 @@ create or replace temp view IPLBallsDetailsTemp
 as
 select t1.id,t1.innings,t1.overs,t1.bowler,ballnumber,isWicketDelivery,row_number() over(partition by t1.id,t1.innings,t1.bowler order by t1.overs,t1.ballnumber) as NoOfball from IPL_Details t1
 
-where extra_type is null and coalesce(kind,'NA') not in ('run out','retired hurt','retired out')
+where extra_type='NA' and coalesce(kind,'NA') not in ('run out','retired hurt','retired out')
 
 
 -- COMMAND ----------
@@ -90,6 +90,11 @@ order by 2 desc
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC #### Best Bowling Figures
+
+-- COMMAND ----------
+
 select id,innings,bowler,sum(total_run) as Runs_Given,sum(isWicketDelivery) as wickets from IPL_Details
 where kind not in ('run out','retired hurt','retired out') and extra_type not in ('legbyes','byes')
 group by id,innings,bowler
@@ -102,7 +107,3 @@ where kind not in ('run out','retired hurt','retired out') and coalesce(extra_ty
 group by bowler
 having sum(isWicketDelivery)>20
 order by bowling_Average
-
--- COMMAND ----------
-
-

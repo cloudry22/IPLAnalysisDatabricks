@@ -20,30 +20,9 @@ order by 1
 -- COMMAND ----------
 
 select season,batter,sum(batsman_run)  as total_runs from IPL_DETAILS
-where season
 group by season,batter
 order by 3 desc
 limit 15
-
--- COMMAND ----------
-
-select MatchNumber,sum(batsman_run) from IPL_DETAILS
-where season=2016 and batter='V Kohli' and MatchNumber='Final'
-group by MatchNumber
-
--- COMMAND ----------
-
-select distinct  *  from IPL_DETAILS
-where season=2016 and batter='V Kohli' and MatchNumber='Final'
-
-
--- COMMAND ----------
-
-delete from IPL_MATCHES_CLEANED;
-
--- COMMAND ----------
-
-select sum(batsman_run) from IPL_BALL_DETAILS_RAW where id=981019 and batter='V Kohli'
 
 -- COMMAND ----------
 
@@ -141,18 +120,7 @@ preceding and current row) as runs_scored ,
 Row_Number() over(partition by Season , MatchNumber,Innings,batter order by Innings,overs,ballnumber rows between unbounded 
 preceding and current row) as balls_faced
 from IPL_DETAILS
-where extra_type is null
-
--- COMMAND ----------
-
-select Season , MatchNumber,Innings,batter ,batsman_run,sum(batsman_run) over(partition by Season , MatchNumber,Innings,batter order by Innings,overs,ballnumber rows between unbounded 
-preceding and current row) as runs_scored,extra_type
-from IPL_DETAILS where batter='BB McCullum' and matchNumber=1
---where batter like 'mcc%'
-
--- COMMAND ----------
-
-select * from ScorePerBall where batter='BB McCullum' and matchNumber=1
+where extra_type='NA'
 
 -- COMMAND ----------
 
