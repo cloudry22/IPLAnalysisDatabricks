@@ -34,7 +34,7 @@ The results of the analysis are stored in delta tables, and are visualized using
 
 
 
-https://user-images.githubusercontent.com/65663124/235883687-745a3afc-e200-430b-804b-9bd1b1327e7f.mp4
+
 
 
 
