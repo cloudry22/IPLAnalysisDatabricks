@@ -21,7 +21,7 @@ select * from cloud_files('${TargetLocationMatches}',"json",map("cloudFiles.infe
 
 -- COMMAND ----------
 
-create or replace streaming live  table IPL_MATCHES_CLEANED
+create or replace  live  table IPL_MATCHES_CLEANED
 (constraint ID_Not_NULL expect(ID is not null) on violation drop row)
 comment "Silver Table"
 as
@@ -49,7 +49,7 @@ from
 
 -- COMMAND ----------
 
-create or replace streaming live  table IPL_BALL_DETAILS_CLEANED
+create or replace  live  table IPL_BALL_DETAILS_CLEANED
 
 comment "Silver Table"
 select
