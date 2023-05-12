@@ -21,7 +21,7 @@ select * from cloud_files('${TargetLocationMatches}',"json",map("cloudFiles.infe
 
 -- COMMAND ----------
 
-create or replace  live  table IPL_MATCHES_CLEANED
+create or replace  streaming live   table IPL_MATCHES_CLEANED
 (constraint ID_Not_NULL expect(ID is not null) on violation drop row)
 comment "Silver Table"
 as
@@ -45,11 +45,11 @@ select
   Umpire1,
   Umpire2
 from
-  live.IPL_MATCHES_RAW
+ stream( live.IPL_MATCHES_RAW)
 
 -- COMMAND ----------
 
-create or replace  live  table IPL_BALL_DETAILS_CLEANED
+create or replace streaming  live  table IPL_BALL_DETAILS_CLEANED
 
 comment "Silver Table"
 select
@@ -70,7 +70,7 @@ select
   fielders_involved,
   BattingTeam
 from
-  live.IPL_BALL_DETAILS_RAW
+ stream( live.IPL_BALL_DETAILS_RAW)
 
 
 -- COMMAND ----------
