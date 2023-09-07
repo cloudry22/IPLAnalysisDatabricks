@@ -1,7 +1,2 @@
 -- Databricks notebook source
-ALTER TABLE IPL.IPL_Deatils
-rename   to IPL.IPL_Details
-
--- COMMAND ----------
-
-drop table  BallByBallDetails
+select * from IPL.IPL_BALL_DETAILS_RAW

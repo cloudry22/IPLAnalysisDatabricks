@@ -8,7 +8,7 @@ This project aims to analyze Indian Premier League (IPL) data using Azure Databr
 
 ![IPL Data Analysis using Databricks](images/ipl_data_analysis_using_databricks.png)
 
-The architecture diagram above depicts the flow of data in the project. The IPL data is sourced from https://cricsheet.org/downloads/. The data is then ingested into Azure Blob Storage, which serves as a data lake. Azure Databricks is used to read and process the data, and the results of the analysis are stored in Azure SQL Database.
+The architecture diagram above depicts the flow of data in the project. The IPL data is sourced from https://cricsheet.org/downloads/. The data is then ingested into Azure Blob Storage, which serves as a data lake. Azure Databricks is used to read and process the data, and the results of the analysis in Delta Tables
 
 ## Getting Started
 
@@ -43,5 +43,4 @@ https://user-images.githubusercontent.com/65663124/235992291-1a7728bb-dfe7-4998-
 
 ## Contact Information
 https://www.linkedin.com/in/pravinraut16/
-
 
