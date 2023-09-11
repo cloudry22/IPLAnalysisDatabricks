@@ -41,7 +41,3 @@ https://user-images.githubusercontent.com/65663124/235992291-1a7728bb-dfe7-4998-
 
 
 
-## Contact Information
-https://www.linkedin.com/in/pravinraut16/
-
-
