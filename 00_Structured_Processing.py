@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %run /Repos/raut1606@gmail.com/IPLAnalysisDatabricks/00_Setup
+# MAGIC %run /Repos/helmi.asari22@outlook.com/IPLAnalysisDatabricks/00_Setup
 
 # COMMAND ----------
 
@@ -12,12 +12,16 @@ new_schema = StructType.fromJson(json.loads(SchemaLocation))
 
 # COMMAND ----------
 
+new_schema
+
+# COMMAND ----------
+
 IPLDataset = (
     spark.readStream.format("cloudFiles")
     .option("cloudFiles.format", "json")
     .option("multiline", "true")
     .option("cloudFiles.inferColumnTypes", "true")
-#    .option("cloudFiles.schemaLocation", SchemaLocation)
+ #   .option("cloudFiles.schemaLocation", SchemaLocation)
     .schema(new_schema)
     .load(SourceLocation)
     .select("*","_metadata.file_name")
@@ -27,7 +31,7 @@ IPLDataset = (
 
 
 innings = IPLDataset.selectExpr("innings", "replace(file_name,'.json') as ID")
-
+innings.display()
 
 # COMMAND ----------
 
@@ -183,4 +187,9 @@ BallByBall.writeStream    .format("json")    .trigger(processingTime="10 seconds
 
 # COMMAND ----------
 
+MatchDetails.display()
 
+# COMMAND ----------
+
+#for i in range(100):
+ #   CopyFile()

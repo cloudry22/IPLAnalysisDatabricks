@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %run /Repos/raut1606@gmail.com/IPLAnalysisDatabricks/00_Setup
+# MAGIC %run /Repos/helmi.asari22@outlook.com/IPLAnalysisDatabricks/00_Setup
 
 # COMMAND ----------
 

@@ -22,8 +22,8 @@ file_exists(mount_point)
 
 # COMMAND ----------
 
-IPLContainerKey=dbutils.secrets.get('GetIPLContainer','IPLContainerKey')
-IPLContainerValue=dbutils.secrets.get('GetIPLContainer','IPLContainerValue')
+IPLContainerKey = dbutils.secrets.get('GetIPLContainer', key='IPLContainerKey')
+IPLContainerValue = dbutils.secrets.get('GetIPLContainer', key='IPLContainerValue')
 
 # COMMAND ----------
 
@@ -44,7 +44,3 @@ extra_configs={IPLContainerKey:IPLContainerValue}
 # COMMAND ----------
 
 dbutils.fs.ls("/mnt/ipl_data/data/")
-
-# COMMAND ----------
-
-
